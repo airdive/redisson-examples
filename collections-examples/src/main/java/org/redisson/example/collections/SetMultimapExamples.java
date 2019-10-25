@@ -17,6 +17,7 @@ package org.redisson.example.collections;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -48,21 +49,27 @@ public class SetMultimapExamples {
         RSet<Integer> values2 = multimap.get("2");
         RSet<Integer> values3 = multimap.get("3");
         RSet<Integer> values4 = multimap.get("4");
-        System.out.println(values3.readUnion("4"));
-        System.out.println(values3.readAll());
-        
-        boolean hasEntry = multimap.containsEntry("1", 3);
-        Set<Entry<String, Integer>> entries = multimap.entries();
-        Collection<Integer> values = multimap.values();
-        
-        boolean isRemoved = multimap.remove("1", 3);
-        Set<Integer> removedValues = multimap.removeAll("1");
-        
-        Collection<? extends Integer> newValues = Arrays.asList(5, 6, 7, 8, 9);
-        boolean isNewKey = multimap.putAll("5", newValues);
-        
-        Set<Integer> oldValues = multimap.replaceValues("2", newValues);
-        Set<Integer> allValues = multimap.getAll("2");
+        RSet<Integer> tmp = multimap.get("tmp");
+        System.out.println(values1.readUnion(values2.getName()));
+//        System.out.println(values2.readUnion("3","4"));
+//        System.out.println(values3.readAll());
+        List<String> list = Arrays.asList(values2.getName(),values4.getName());
+//        System.out.println(list);
+        System.out.println(values2.readUnion(list.get(0),list.get(1)));
+        System.out.println(tmp.readUnion((String[])list.toArray()));;
+
+//        boolean hasEntry = multimap.containsEntry("1", 3);
+//        Set<Entry<String, Integer>> entries = multimap.entries();
+//        Collection<Integer> values = multimap.values();
+//
+//        boolean isRemoved = multimap.remove("1", 3);
+//        Set<Integer> removedValues = multimap.removeAll("1");
+//
+//        Collection<? extends Integer> newValues = Arrays.asList(5, 6, 7, 8, 9);
+//        boolean isNewKey = multimap.putAll("5", newValues);
+//
+//        Set<Integer> oldValues = multimap.replaceValues("2", newValues);
+//        Set<Integer> allValues = multimap.getAll("2");
         
         redisson.shutdown();
     }

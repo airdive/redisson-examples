@@ -21,13 +21,16 @@ import java.util.Set;
 import org.redisson.Redisson;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 
 public class SetExamples {
 
     public static void main(String[] args) {
         // connects to 127.0.0.1:6379 by default
-        RedissonClient redisson = Redisson.create();
-        
+        Config config = new Config();
+        config.useSingleServer().setTimeout(1000000).setAddress("redis://192.168.3.76:6379");
+        RedissonClient redisson = Redisson.create(config);
+
         RSet<String> set = redisson.getSet("mySet");
         set.add("1");
         set.add("2");
@@ -51,9 +54,11 @@ public class SetExamples {
         secondsSet.add("5");
 
         // union with "mySecondsSet" and write it
-        set.union(secondsSet.getName());
+//        set.union(secondsSet.getName());
         // union with "mySecondsSet" without change of set
         set.readUnion(secondsSet.getName());
+        System.out.println(set+","+secondsSet);
+        System.out.println(set.readUnion(secondsSet.getName()));
         
         // diff with "mySecondsSet" and write it
         set.diff(secondsSet.getName());

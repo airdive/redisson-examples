@@ -24,12 +24,15 @@ import org.redisson.Redisson;
 import org.redisson.api.RSet;
 import org.redisson.api.RSetMultimap;
 import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 
 public class SetMultimapExamples {
 
     public static void main(String[] args) {
         // connects to 127.0.0.1:6379 by default
-        RedissonClient redisson = Redisson.create();
+        Config config = new Config();
+        config.useSingleServer().setTimeout(1000000).setAddress("redis://192.168.3.76:6379");
+        RedissonClient redisson = Redisson.create(config);
         
         RSetMultimap<String, Integer> multimap = redisson.getSetMultimap("myMultimap");
         multimap.put("1", 1);
@@ -38,9 +41,15 @@ public class SetMultimapExamples {
         multimap.put("2", 5);
         multimap.put("2", 6);
         multimap.put("4", 7);
+        multimap.put("3", 7);
+        multimap.put("3", 8);
         
         RSet<Integer> values1 = multimap.get("1");
         RSet<Integer> values2 = multimap.get("2");
+        RSet<Integer> values3 = multimap.get("3");
+        RSet<Integer> values4 = multimap.get("4");
+        System.out.println(values3.readUnion("4"));
+        System.out.println(values3.readAll());
         
         boolean hasEntry = multimap.containsEntry("1", 3);
         Set<Entry<String, Integer>> entries = multimap.entries();
